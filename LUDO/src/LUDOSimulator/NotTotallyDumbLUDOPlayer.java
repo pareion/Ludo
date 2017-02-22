@@ -163,8 +163,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 					if(index < 403 && index < 410 && color == 3)
 						points += 10;
 				}
-				
-				}
+
 				
 			}
 
