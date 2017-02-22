@@ -18,7 +18,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 		board.rollDice();
 
 		counter = 0;
-		maxcounter = 1;
+		maxcounter = 30;
 
 		MiniMax(board);
 
@@ -120,21 +120,21 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 				int index = tempBoard[color][i];
 				if (color == 0) {
 					if(board.atHome(index, color))
-						points += 9;
+						points += 90;
 					if(board.isGlobe(index))
-						points -= 8;
+						points -= 80;
 					if(board.isStar(index))
-						points -= 5;
+						points -= 50;
 					if (index >= 37 && index < 51)
-						points -= 7;
+						points -= 70;
 					else if (index >= 24 && index < 51)
-						points -= 6;
+						points -= 60;
 					else if (index >= 11 && index < 51)
-						points -= 4;
+						points -= 40;
 					else if (index >= 0 && index < 51)
-						points -= 3;
+						points -= 30;
 					if(index < 103)
-						points -= 10;
+						points -= 100;
 				}else{
 					if(color == 1 && index < 13)
 						index -= 13;
@@ -143,25 +143,25 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 					if(color == 3 && index < 39)
 						index -= 39;
 					if(board.atHome(index, color))
-						points -= 9;
+						points -= 90;
 					if(board.isGlobe(index))
-						points += 8;
+						points += 80;
 					if(board.isStar(index))
-						points += 5;
+						points += 50;
 					if (index >= 37 && index < 51)
-						points += 7;
+						points += 70;
 					else if (index >= 24 && index < 51)
-						points += 6;
+						points += 60;
 					else if (index >= 11 && index < 51)
-						points += 4;
+						points += 40;
 					else if (index >= 0 && index < 51)
-						points += 3;
+						points += 30;
 					if(index < 203 && index < 210 && color == 1)
-						points += 10;
+						points += 100;
 					if(index < 303 && index < 310 && color == 2)
-						points += 10;
+						points += 100;
 					if(index < 403 && index < 410 && color == 3)
-						points += 10;
+						points += 100;
 				}
 
 				
