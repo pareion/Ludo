@@ -70,10 +70,10 @@ public class LUDO extends Frame implements ActionListener
 		int[] result = new int[4];
 		//board.setPlayer(new ManualLUDOPlayer(board),LUDOBoard.YELLOW);
 		//board.setPlayer(new RandomLUDOPlayer(board),LUDOBoard.YELLOW);
-		board.setPlayer(new SmartLUDOPlayer(board), LUDOBoard.YELLOW);
-		board.setPlayer(new RandomLUDOPlayer(board),LUDOBoard.RED);
+		board.setPlayer(new NotTotallyDumbLUDOPlayer(board), LUDOBoard.YELLOW);
+		board.setPlayer(new AggressiveLUDOPlayer(board),LUDOBoard.RED);
 		board.setPlayer(new RandomLUDOPlayer(board),LUDOBoard.BLUE);
-		board.setPlayer(new RandomLUDOPlayer(board),LUDOBoard.GREEN);
+		board.setPlayer(new SemiSmartLUDOPlayer(board),LUDOBoard.GREEN);
 		
 		try {
 			for(int i=0;i<3000;i++) {
@@ -88,10 +88,10 @@ public class LUDO extends Frame implements ActionListener
 				board.reset();
 				//board.setPlayer(new ManualLUDOPlayer(board),LUDOBoard.YELLOW);
 				//board.setPlayer(new RandomLUDOPlayer(board),LUDOBoard.YELLOW);
-				board.setPlayer(new SmartLUDOPlayer(board), LUDOBoard.YELLOW);
-				board.setPlayer(new RandomLUDOPlayer(board),LUDOBoard.RED);
+				board.setPlayer(new NotTotallyDumbLUDOPlayer(board), LUDOBoard.YELLOW);
+				board.setPlayer(new AggressiveLUDOPlayer(board),LUDOBoard.RED);
 				board.setPlayer(new RandomLUDOPlayer(board),LUDOBoard.BLUE);
-				board.setPlayer(new RandomLUDOPlayer(board),LUDOBoard.GREEN);
+				board.setPlayer(new SemiSmartLUDOPlayer(board),LUDOBoard.GREEN);
 				if((i%500)==0) System.out.print(".");
 			}
 		} catch (InterruptedException e) {
