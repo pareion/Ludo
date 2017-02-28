@@ -18,10 +18,9 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 		board.rollDice();
 
 		counter = 0;
-		maxcounter = 7;
+		maxcounter = 2;
 
 		MiniMax(board);
-
 	}
 
 	private void MiniMax(LUDOBoard board) {
@@ -62,7 +61,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 				this.counter = 0;
 				maxcounter = 0;
 			}
-		
+
 		board.moveBrick(bestMove);
 	}
 
@@ -113,60 +112,142 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 
 	private float EVAL() {
 		int points = 0;
-		for (int color = 0; color < 4; color++)
-			for (int i = 0; i < 4; i++) {
-				int index = tempBoard[color][i];
-				if (color == 0) {
-					if(board.atHome(index, color))
-						points += 90;
-					if(board.isGlobe(index))
-						points -= 80;
-					if(board.isStar(index))
-						points -= 50;
-					if (index >= 37 && index < 51)
-						points -= 70;
-					else if (index >= 24 && index < 51)
-						points -= 60;
-					else if (index >= 11 && index < 51)
-						points -= 40;
-					else if (index >= 0 && index < 51)
-						points -= 30;
-					if(index < 103)
-						points -= 100;
-				}else{
-					if(color == 1 && index < 13)
-						index -= 13;
-					if(color == 2 && index < 26)
-						index -= 16;
-					if(color == 3 && index < 39)
-						index -= 39;
-					if(board.atHome(index, color))
-						points -= 90;
-					if(board.isGlobe(index))
-						points += 80;
-					if(board.isStar(index))
-						points += 50;
-					if (index >= 37 && index < 51)
-						points += 70;
-					else if (index >= 24 && index < 51)
-						points += 60;
-					else if (index >= 11 && index < 51)
-						points += 40;
-					else if (index >= 0 && index < 51)
-						points += 30;
-					if(index < 203 && index < 210 && color == 1)
-						points += 100;
-					if(index < 303 && index < 310 && color == 2)
-						points += 100;
-					if(index < 403 && index < 410 && color == 3)
-						points += 100;
-				}
-
-				
+		for (int color = 0; color < 4; color++) {
+			for (int brick = 0; brick < 4; brick++) {
+				points += OpponentsOuts(color, brick);
+				points += StandInFrontOfOpponent(color, brick);
+				points += HitOpponent(color,brick);
 			}
 
+		}
 		return points;
 
+	}
+
+	private int HitOpponent(int color, int brick) {
+		int index = tempBoard[color][brick];
+		int points = 0;
+		if (index < 51)
+			switch (color) {
+			case 0:
+				for (int color2 = 1; color2 < 4; color2++) {
+					for (int brick2 = 0; brick2 < 4; brick2++) {
+						if (tempBoard[color2][brick2] == index) {
+							points -= 5;
+						}
+					}
+				}
+				break;
+			case 1:
+				if(index >= 13)
+					index -= 13;
+				for (int color2 = 0; color2 < 4; color2++) {
+					for (int brick2 = 0; brick2 < 4; brick2++) {
+						if (tempBoard[color2][brick2] == index) {
+							points += 5;
+						}
+					}
+				}
+				break;
+			case 2:
+				if(index >= 26)
+					index -= 26;
+				for (int color2 = 0; color2 < 4; color2++) {
+					for (int brick2 = 0; brick2 < 4; brick2++) {
+						if (tempBoard[color2][brick2] == index) {
+							points += 5;
+						}
+					}
+				}
+				break;
+			case 3:
+				if(index >= 39)
+					index -= 39;
+				for (int color2 = 0; color2 < 4; color2++) {
+					for (int brick2 = 0; brick2 < 4; brick2++) {
+						if (tempBoard[color2][brick2] == index) {
+							points += 5;
+						}
+					}
+				}
+				break;
+			}
+		return points;
+	}
+
+	private int StandInFrontOfOpponent(int color, int brick) {
+		int index = tempBoard[color][brick];
+		int points = 0;
+		if (index < 51)
+			switch (color) {
+			case 0:
+				for (int color2 = 1; color2 < 4; color2++) {
+					for (int brick2 = 0; brick2 < 4; brick2++) {
+						if ((tempBoard[color2][brick2] - index) <= 6) {
+							points -= (tempBoard[color2][brick2] - index);
+						}
+					}
+				}
+				break;
+			case 1:
+				if(index >= 13)
+					index -= 13;
+				for (int color2 = 0; color2 < 4; color2++) {
+					for (int brick2 = 0; brick2 < 4; brick2++) {
+						if ((tempBoard[color2][brick2] - index) <= 6 && color2 != 1) {
+							points +=  (tempBoard[color2][brick2] - index);
+						}
+					}
+				}
+				break;
+			case 2:
+				if(index >= 26)
+					index -= 26;
+				for (int color2 = 0; color2 < 4; color2++) {
+					for (int brick2 = 0; brick2 < 4; brick2++) {
+						if ((tempBoard[color2][brick2] - index) <= 6 && color2 != 2) {
+							points +=  (tempBoard[color2][brick2] - index);
+						}
+					}
+				}
+				break;
+			case 3:
+				if(index >= 39)
+					index -= 39;
+				for (int color2 = 0; color2 < 4; color2++) {
+					for (int brick2 = 0; brick2 < 4; brick2++) {
+						if ((tempBoard[color2][brick2] - index) <= 6 && color2 != 3) {
+							points += (tempBoard[color2][brick2] - index);
+						}
+					}
+				}
+				break;
+			}
+		return points;
+	}
+
+	private int OpponentsOuts(int color, int brick) {
+		int index = tempBoard[color][brick];
+		int points = 0;
+		switch (color) {
+		case 0:
+			if (index > 99 && index < 104)
+				points -= 3;
+			break;
+		case 1:
+			if (index > 199 && index < 204)
+				points += 3;
+			break;
+		case 2:
+			if (index > 299 && index < 304)
+				points += 3;
+			break;
+		case 3:
+			if (index > 399 && index < 404)
+				points += 3;
+			break;
+		}
+		return points;
 	}
 
 	private boolean maxDepth() {
