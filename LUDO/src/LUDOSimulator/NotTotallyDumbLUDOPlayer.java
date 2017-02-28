@@ -18,7 +18,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 		board.rollDice();
 
 		counter = 0;
-		maxcounter = 30;
+		maxcounter = 7;
 
 		MiniMax(board);
 
@@ -55,22 +55,20 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 				tempBoard = board.getNewBoardState(board.getBoardState(), moveAbleBricks[b], board.getMyColor(),
 						board.getDice());
 				minscore = MIN();
-				if (minscore > bestScore) {
+				if (minscore >= bestScore) {
 					bestMove = moveAbleBricks[b];
 					bestScore = minscore;
 				}
-				// TODO se om man står på en stjerne og ryk +x felter tilbage
-				// tempBoard = board.getNewBoardState(tempBoard,
-				// moveAbleBricks[b], board.getMyColor(), -board.getDice());
+				this.counter = 0;
+				maxcounter = 0;
 			}
-		this.counter = 0;
-		maxcounter = 0;
+		
 		board.moveBrick(bestMove);
 	}
 
 	private float MAX() {
 		if (isGameOverComputer())
-			return -999;
+			return 9999;
 		else if (maxDepth()) {
 			return EVAL();
 		} else {
@@ -93,7 +91,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 
 	private float MIN() {
 		if (isGameOverHuman())
-			return 999;
+			return -9999;
 		else if (maxDepth())
 			return EVAL();
 		else {
@@ -179,7 +177,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 		return false;
 	}
 
-	private boolean isGameOverHuman() {
+	private boolean isGameOverComputer() {
 		boolean result = true;
 		for (int i = 0; i < 4; i++) {
 			if (tempBoard[0][i] != ((1) * 100 + 9))
@@ -188,7 +186,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 		return result;
 	}
 
-	private boolean isGameOverComputer() {
+	private boolean isGameOverHuman() {
 		boolean result = true;
 		for (int color = 1; color < 4; color++) {
 			for (int i = 0; i < 4; i++) {
