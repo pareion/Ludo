@@ -1,12 +1,14 @@
 package LUDOSimulator;
 
-import java.util.Random;
-
 public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 
 	LUDOBoard board;
 	private int counter, maxcounter;
-	private int[][] tempBoard;
+	private int[][] tempBoard, previousBoard;
+	private float alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
+	boolean done = false;
+	float bestScoreMin;
+	float bestScoreMax;
 
 	public NotTotallyDumbLUDOPlayer(LUDOBoard board) {
 		this.board = board;
@@ -18,7 +20,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 		board.rollDice();
 
 		counter = 0;
-		maxcounter = 2;
+		maxcounter = 3;
 
 		MiniMax(board);
 	}
@@ -71,20 +73,33 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 		else if (maxDepth()) {
 			return EVAL();
 		} else {
-			float bestScore = -9999;
-			for (int brick = 0; brick < 4; brick++)
-				for (int color = 1; color < 4; color++)
-					for (int dice = 1; dice < 7; dice++) {
 
-						tempBoard = board.getNewBoardState(tempBoard, brick, color, dice);
+			bestScoreMax = -9999;
+			done = false;
+			done: if (!done)
+				for (int brick = 0; brick < 4; brick++)
+					for (int color = 1; color < 4; color++) {
+						for (int dice = 1; dice < 7; dice++) {
+							previousBoard = tempBoard;
+							tempBoard = board.getNewBoardState(tempBoard, brick, color, dice);
 
-						float score = MIN();
-						if (score > bestScore) {
-							bestScore = score;
+							float score = MIN();
+							alpha = score;
+
+							if (beta <= alpha) {
+								done = true;
+								break done;
+							}
+							
+							if (score > bestScoreMax) {
+								bestScoreMax = score;
+							}
+
+							tempBoard = previousBoard;
 						}
-						tempBoard = board.getNewBoardState(tempBoard, brick, color, -dice);
+
 					}
-			return bestScore;
+			return bestScoreMax;
 		}
 	}
 
@@ -94,19 +109,29 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 		else if (maxDepth())
 			return EVAL();
 		else {
-			float bestScore = 9999;
-			for (int i = 0; i < 4; i++) {
-				for (int dice = 1; dice < 7; dice++) {
-					tempBoard = board.getNewBoardState(tempBoard, i, 0, dice);
-					float score = MAX();
-					if (score < bestScore) {
-						bestScore = score;
-					}
-					tempBoard = board.getNewBoardState(tempBoard, i, 0, -dice);
-				}
-			}
+			bestScoreMin = 9999;
+			done = false;
+			done: if (!done)
+				for (int i = 0; i < 4; i++) {
+					for (int dice = 1; dice < 7; dice++) {
+						previousBoard = tempBoard;
+						tempBoard = board.getNewBoardState(tempBoard, i, 0, dice);
+						float score = MAX();
+						beta = score;
+						
+						if (beta <= alpha) {
+							done = true;
+							break done;
+						}
+						if (score < bestScoreMin) {
+							bestScoreMin = score;
+						}
 
-			return bestScore;
+						tempBoard = previousBoard;
+					}
+
+				}
+			return bestScoreMin;
 		}
 	}
 
@@ -116,7 +141,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 			for (int brick = 0; brick < 4; brick++) {
 				points += OpponentsOuts(color, brick);
 				points += StandInFrontOfOpponent(color, brick);
-				points += HitOpponent(color,brick);
+				points += HitOpponent(color, brick);
 			}
 
 		}
@@ -139,7 +164,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 				}
 				break;
 			case 1:
-				if(index >= 13)
+				if (index >= 13)
 					index -= 13;
 				for (int color2 = 0; color2 < 4; color2++) {
 					for (int brick2 = 0; brick2 < 4; brick2++) {
@@ -150,7 +175,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 				}
 				break;
 			case 2:
-				if(index >= 26)
+				if (index >= 26)
 					index -= 26;
 				for (int color2 = 0; color2 < 4; color2++) {
 					for (int brick2 = 0; brick2 < 4; brick2++) {
@@ -161,7 +186,7 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 				}
 				break;
 			case 3:
-				if(index >= 39)
+				if (index >= 39)
 					index -= 39;
 				for (int color2 = 0; color2 < 4; color2++) {
 					for (int brick2 = 0; brick2 < 4; brick2++) {
@@ -190,29 +215,29 @@ public class NotTotallyDumbLUDOPlayer implements LUDOPlayer {
 				}
 				break;
 			case 1:
-				if(index >= 13)
+				if (index >= 13)
 					index -= 13;
 				for (int color2 = 0; color2 < 4; color2++) {
 					for (int brick2 = 0; brick2 < 4; brick2++) {
 						if ((tempBoard[color2][brick2] - index) <= 6 && color2 != 1) {
-							points +=  (tempBoard[color2][brick2] - index);
+							points += (tempBoard[color2][brick2] - index);
 						}
 					}
 				}
 				break;
 			case 2:
-				if(index >= 26)
+				if (index >= 26)
 					index -= 26;
 				for (int color2 = 0; color2 < 4; color2++) {
 					for (int brick2 = 0; brick2 < 4; brick2++) {
 						if ((tempBoard[color2][brick2] - index) <= 6 && color2 != 2) {
-							points +=  (tempBoard[color2][brick2] - index);
+							points += (tempBoard[color2][brick2] - index);
 						}
 					}
 				}
 				break;
 			case 3:
-				if(index >= 39)
+				if (index >= 39)
 					index -= 39;
 				for (int color2 = 0; color2 < 4; color2++) {
 					for (int brick2 = 0; brick2 < 4; brick2++) {
